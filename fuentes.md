@@ -1,0 +1,2 @@
+• Investiguen al menos dos fuentes públicas adicionales. Para cada una registren: institución y enlace oficial, variables, periodicidad, cobertura temporal, formato de acceso y relación con las fuentes base.
+• Seleccionen una fuente candidata y justifiquen su utilidad y viabilidad. Hoy no es necesario descargarla ni integrarla.
