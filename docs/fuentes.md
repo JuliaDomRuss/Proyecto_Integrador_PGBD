@@ -63,7 +63,6 @@ La granularidad fina (minutos) solo sirve para ventanas recientes. Para análisi
 - **Acceso inmediato:** instalación con `pip` y una línea de código, sin trámites.
 - **Costo cero.**
 - **Riesgos:** es una librería no oficial que depende de Yahoo; el formato o la disponibilidad pueden cambiar, hay límites de peticiones y los términos de Yahoo restringen ciertos usos. Es adecuada para análisis académicos o exploratorios; para producción conviene contrastar con una fuente oficial o licenciada.
-- **Mitigación:** guardar copias locales de lo descargado y validar una muestra contra otra fuente, como el cierre del S&P 500 en FRED.
 
 ### Ejemplo de extracción
 
