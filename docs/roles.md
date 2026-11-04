@@ -42,3 +42,9 @@ Para este proyecto integrador se adoptó un modelo de responsabilidad compartida
 ## Acuerdos Iniciales 
 * **Cuidado de Información:** No subir archivos de datos pesados (`.parquet`, `.csv` voluminosos) ni claves/credenciales privadas al repositorio Git. 
 * **Comunicación:** Sincronización continua previa a cada integración mayor para evitar conflictos de fusión (*merge conflicts*).
+# Roles iniciales
+
+## Actividad 9 | Diseño y organización del proyecto integrador
+- Developer
+- Technical Reviewer
+- Documentation Lead
