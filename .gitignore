@@ -222,8 +222,8 @@ __marimo__/
 # Datos: no se suben a GitHub
 data/raw/*
 data/processed/*
-!data/processed/igae_limpio.csv
-!data/processed/ingresos_gobierno_limpio.csv
-!data/raw/tipo_cambio.csv
+!data/processed/igae_limpio.parquet
+!data/processed/ingresos_gobierno_limpio.parquet
+!data/raw/tipo_cambio_fix.csv
 !data/raw/.gitkeep
 !data/processed/.gitkeep
