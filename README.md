@@ -19,15 +19,15 @@ Construir un pipeline distribuido con PySpark que permita analizar la correlaci�
 ---
 
 ## Fuentes de Información 
-El proyecto parte de 6 archivos. El detalle de cada fuente (variables, periodicidad, justificación y alternativas evaluadas) está en docs/fuentes.md.
+El proyecto parte de 6 archivos. El detalle de cada fuente (variables, periodicidad, justificación y alternativas evaluadas) está en [docs/fuentes.md](docs/fuentes.md).
 ### Fuentes Base del Curso 
-1. **SHCP (Finanzas Públicas):** Ingresos (\\(XBB\\)) y Gastos (\\(XBC\\)) del Gobierno Federal. (XBB y XBC son las claves de las series)
+1. **SHCP (Finanzas Públicas):** Ingresos (`XBB`) y Gastos (`XBC`) del Gobierno Federal. (`XBB` y `XBC` son las claves de las series).
 2. **INEGI (INPC):** Índice Nacional de Precios al Consumidor para deflactación y cálculo de inflación. 
 3. **INEGI (IGAE):** Indicador Global de la Actividad Económica por sectores productivos.
 
 ### Fuentes Adicionales Integradas 
 1. **Tipo de Cambio USD/MXN:** Banco de México, serie SF43718. Indicador de presión cambiaria y volatilidad monetaria externa.
-2. **Índice S&P 500:** Indicador de apetito por riesgo y comportamiento de los mercados financieros globales. Se obtendrá con la librería yfinance de Yahoo Finanzas (símbolo ^GSPC), como se justifica en docs/fuentes.md.
+2. **Índice S&P 500:** Indicador de apetito por riesgo y comportamiento de los mercados financieros globales. Se obtendrá con la librería `yfinance` de Yahoo Finanzas (símbolo `^GSPC`), como se justifica en [docs/fuentes.md](docs/fuentes.md).
 3. **Eventos históricos:** Archivo CSV que elaboraremos como equipo con las crisis y eventos globales a contrastar con las series. Especificando los eventos identificables.
 
 ---
@@ -38,11 +38,11 @@ Los datos originales **no se almacenan en este repositorio**. Para reproducir el
 
 | Fuente | Acceso | Periodicidad | Cobertura | Archivo en `data/raw/` |
 | --- | --- | --- | --- | --- |
-| Tipo de cambio FIX (Banxico, SF43718) | Notebook [01_descarga_tipo_cambio.ipynb](notebooks/01_descarga_tipo_cambio.ipynb), que usa la API REST del SIE (https://www.banxico.org.mx/SieAPIRest/service/v1/). Requiere token gratuito | "Diaria (se agrega a mensual en la etapa 4)" | 12-nov-1991 a la fecha de ejecución | `tipo_cambio_fix.csv` |
-| S&P 500 (`^GSPC`) | Librería `yfinance` de Yahoo Finanzas (`pip install yfinance`), sin token. Aún no hay notebook de descarga | "Diaria (se agrega a mensual en la etapa 4)" | Desde 1927 | **[Por definir]** |
+| Tipo de cambio FIX (Banxico, SF43718) | Notebook [01_descarga_tipo_cambio.ipynb](notebooks/01_descarga_tipo_cambio.ipynb), que usa la API REST del SIE (https://www.banxico.org.mx/SieAPIRest/service/v1/). Requiere token gratuito | Diaria (se agrega a mensual en la etapa 4) | 12-nov-1991 a la fecha de ejecución | `tipo_cambio_fix.csv` |
+| S&P 500 (`^GSPC`) | Librería `yfinance` de Yahoo Finanzas (`pip install yfinance`), sin token. Aún no hay notebook de descarga | Diaria (se agrega a mensual en la etapa 4) | Desde 1927 | **[Por definir]** |
 | Eventos históricos | CSV elaborado por el equipo (por desarrollar) | No aplica | Desde 1990 a 2026 | **[Por definir]** |
-| IGAE (INEGI) | A través del INEGI. (https://www.inegi.org.mx/temas/igae/) | Mensual | Desde 1993 | **[Por definir]** |
-| Ingresos y gastos (SHCP) | Datos abiertos de la SHCP (https://www.datos.gob.mx/organization/secretaria_hacienda) y series (`XBB`, `XBC`) | Mensual | Desde 2011 | **[Por definir]** |
+| IGAE (INEGI) | [A través del INEGI.] (https://www.inegi.org.mx/temas/igae/) | Mensual | Desde 1993 | **[Por definir]** |
+| Ingresos y gastos (SHCP) | [Datos abiertos de la SHCP] (https://www.datos.gob.mx/organization/secretaria_hacienda) y series (`XBB`, `XBC`) | Mensual | Desde 2011 | **[Por definir]** |
 | INPC (INEGI) | A través del INEGI. (https://www.inegi.org.mx/temas/inpc/) | Mensual | **[Por definir]** | **[Por definir]** |
  
 **Token de la API de Banxico:** no se sube al repositorio. Cada integrante debe solicitar su propio token gratuito en el sitio del SIE y guardarlo en la variable de entorno `BANXICO_TOKEN`, que es la que lee el notebook:
@@ -54,8 +54,6 @@ export BANXICO_TOKEN="<su_token>"
 # Windows (PowerShell)
 $env:BANXICO_TOKEN = "<su_token>"
 ````
-````
-
 
 ---
 
