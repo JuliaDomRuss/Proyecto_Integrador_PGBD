@@ -32,8 +32,8 @@ def main():
     )
     spark.sparkContext.setLogLevel("ERROR")
 
-    fx = spark.read.csv(FX_PATH, header=True, inferSchema=False)
-    igae = spark.read.parquet(IGAE_PATH)
+    fx = spark.read.csv(FX_PATH, header=True, inferSchema=False).cache()
+    igae = spark.read.parquet(IGAE_PATH).cache()
 
     results = [
         # run both checks on both datasets with their respective validation functions 
@@ -41,6 +41,8 @@ def main():
         run_check("IGAE", validate_igae, igae),
     ]
 
+    fx.unpersist()
+    igae.unpersist()
     spark.stop()
     sys.exit(0 if all(results) else 1)
 
