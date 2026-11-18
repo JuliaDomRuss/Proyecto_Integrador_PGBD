@@ -42,6 +42,14 @@ def validate_raw_exchange_rate(df):
     if bad_values > 0:
         raise ValueError(f"{name}: {bad_values} values are not numeric")
 
+    non_positive = (
+        df.filter(F.col("dato") != "N/E")
+        .filter(F.col("dato").cast("double") <= 0)
+        .count()
+    )
+    if non_positive > 0:
+        raise ValueError(f"{name}: {non_positive} exchange rate values are <= 0")
+
     require_unique(df, ["fecha"], name)
     return df.count()
 
