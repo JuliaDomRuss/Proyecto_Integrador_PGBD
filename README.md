@@ -86,21 +86,21 @@ El pipeline tiene siete etapas, de las fuentes al análisis:
 **¿Por qué *left join* desde el IGAE?** Las series tienen coberturas distintas: tipo de cambio desde 1991, IGAE desde 1993 y finanzas públicas desde 2011. Un *inner join* recortaría el análisis a 2011 en adelante y dejaría fuera las crisis de 1994 y 2008. Los meses sin datos de finanzas quedan como nulos documentados.
 
 ---
- 
+
 ## Estado actual del desarrollo
- 
+
 | Componente | Estado | Comentario |
 | --- | --- | --- |
 | Definición del proyecto y roles | Terminado | [docs/roles.md](docs/roles.md) |
 | Fuentes de datos (selección y justificación) | Terminado | [docs/fuentes.md](docs/fuentes.md) |
 | Diagrama de arquitectura | Terminado | [docs/arquitectura.png](docs/arquitectura.png) |
-| Descarga del tipo de cambio (Banxico) | Terminado | [Notebook 01](notebooks/01_descarga_tipo_cambio.ipynb): 8,791 registros, del 12-nov-1991 al 03-nov-2026, guardados en `data/raw/tipo_cambio_fix.csv` |
-| Descarga del S&P 500 | **[Por definir]** | |
-| Archivo de eventos históricos | **[Por definir]** | |
-| Código reutilizable en `src/` | No iniciado | `src/` solo contiene `.gitkeep` |
-| Ingesta en Spark, validación y limpieza | **[Por definir]** | |
-| Transformación e integración final | **[Por definir]** | |
-| Almacenamiento en Parquet | **[Por definir]** | |
+| Descarga del tipo de cambio (Banxico) | Terminado | [Notebook 01](notebooks/01_descarga_tipo_cambio.ipynb): `8,791` registros, desde `1991-11-12`, guardados en `data/raw/tipo_cambio_fix.csv` |
+| Descarga del S&P 500 | Terminado | [Notebook 02](notebooks/02_descarga_sp%26500_mensual.ipynb): `442` registros mensuales (`^GSPC`, desde `1990-01-01`), guardados en `data/raw/s&p500_mensual.csv` |
+| Archivo de eventos históricos | **[Por definir]** | Pendiente de confirmar si ya existe en el repositorio |
+| Código reutilizable en `src/` | Terminado | Módulos productivos en [`src/ingestion/extract.py`](src/ingestion/extract.py), [`src/quality/validate.py`](src/quality/validate.py), [`src/transformations/integrate_enrich.py`](src/transformations/integrate_enrich.py) y orquestador [`pipeline.py`](pipeline.py) |
+| Ingesta en Spark, validación y limpieza | Terminado | Esquemas explícitos (`StructType`), limpieza de `"N/E"`, mensualización con `F.max_by()` y contratos de calidad de entrada/intermedia/salida |
+| Transformación e integración final | Terminado | Homologación temporal (`PERIODO`), cruce `1:1` con *Inner Join* + `F.broadcast()` y evidencia registrada en [`reports/ultima_ejecucion.json`](reports/ultima_ejecucion.json) |
+| Almacenamiento en Parquet | Terminado | `187` registros y `9` columnas (`0` nulos) persistidos en `data/processed/proyecto_integrado_mensual.parquet` y verificados en disco |
 | Análisis y visualización | No iniciado | Se define más adelante |
 | Guía de optimización | En curso (Actividad 10) | [docs/guia_optimizacion.md](docs/guia_optimizacion.md) |
  
@@ -180,3 +180,80 @@ Ningún integrante hace `push` directo a `main`: cada cambio va en una rama (por
 | **Louis Frederic J. Dangremont** | **Technical Reviewer 2** | Revisión de código, pruebas de ejecución e integración de ramas a `main`. |
 | **Alisson Jazmín García Cardenas** | **Documentation Lead** | Coordinación de documentación técnica, estructura Markdown, citas bibliográficas y reportes. |
  
+ ## Pipeline Modular de Datos
+
+El flujo de procesamiento transforma y consolida las fuentes económicas nacionales y los indicadores financieros internacionales en un conjunto de datos mensual único (`1:1`), validado y reproducible de principio a fin bajo el patrón:
+
+> `Extract` → `Validate` → `Transform & Integrate` → `Validate` → `Load` → `Verify`
+
+### 1. Estructura Modular del Código
+
+- [`src/ingestion/extract.py`](src/ingestion/extract.py): Lectura del Parquet integrado del Laboratorio 8 y carga de los archivos CSV externos mediante esquemas explícitos (`StructType`) para proteger el contrato de tipos desde la ingesta.
+- [`src/quality/validate.py`](src/quality/validate.py): Contratos de calidad de entrada y salida que detienen la ejecución si faltan columnas, existen tipos incorrectos, aparecen valores nulos o se detectan periodos duplicados.
+- [`src/transformations/integrate_enrich.py`](src/transformations/integrate_enrich.py): Limpieza de registros, mensualización del tipo de cambio diario, homologación de claves temporales (`PERIODO`) e integración mediante *Inner Join* con `F.broadcast()`.
+- [`pipeline.py`](pipeline.py): Orquestador principal en la raíz del proyecto; coordina todas las etapas, etiqueta la ejecución en Spark UI con `setJobGroup()` y genera el registro de evidencia en [`reports/ultima_ejecucion.json`](reports/ultima_ejecucion.json).
+
+---
+
+### 2. Fuentes Utilizadas y Conteos de Entrada (`data/raw/`)
+
+| Fuente | Archivo local | Origen | Frecuencia original | Registros de entrada |
+| :--- | :--- | :--- | :--- | :---: |
+| **SHCP + INPC + IGAE** | `finanzas_igae_mensual_final.parquet` | Producto integrado del Laboratorio 8 | Mensual | **187** |
+| **Tipo de Cambio USD/MXN** | `tipo_cambio_fix.csv` | [Banxico](https://www.banxico.org.mx/SieAPIRest/service/v1/) (Serie `SF43718`, desde `1991-11-12`) | Diaria | **8,791** |
+| **Índice S&P 500** | `s&p500_mensual.csv` | [Yahoo Finance](https://finance.yahoo.com/quote/%5EGSPC/) (`^GSPC`, desde `1990-01-01`) | Mensual | **442** |
+
+> **Nota:** Los archivos pesados en `data/` se excluyen del repositorio mediante `.gitignore`; los CSV externos se generan ejecutando los notebooks [`01_descarga_tipo_cambio.ipynb`](01_descarga_tipo_cambio.ipynb) y [`02_descarga_sp&500_mensual.ipynb`](02_descarga_sp%26500_mensual.ipynb).
+
+---
+
+### 3. Decisiones Principales de Limpieza y Transformaciones
+
+1. **Limpieza y mensualización del Tipo de Cambio (`TC_CIERRE`):**
+   - Se filtraron registros nulos o marcados como `"N/E"` en la columna `dato`.
+   - Se convirtió `fecha` de formato texto (`dd/MM/yyyy`) a tipo `date` y `dato` a `double`, truncando cada fecha al primer día del mes (`PERIODO = YYYY-MM-01`).
+   - Se agrupó por `PERIODO` (`groupBy`) utilizando `F.max_by("tc_valor", "fecha_dt")` para conservar exclusivamente el valor de cierre correspondiente al último día hábil disponible de cada mes.
+2. **Homologación temporal del S&P 500 (`SP500_CIERRE`):**
+   - El archivo descargado registra las observaciones al último día calendario del mes (`ME`). Se aplicó `F.trunc(..., "month")` sobre `fecha` para alinear su clave `PERIODO` al primer día del mes y hacerlo compatible con el dataset del Laboratorio 8, conservando únicamente el valor de cierre mensual (`SP500_CIERRE`).
+3. **Integración `1:1` optimizada:**
+   - Se integraron las tres fuentes mediante *Inner Join* sobre la clave común `PERIODO`.
+   - Al tratarse de series mensuales compactas, se envolvió el tipo de cambio y el S&P 500 con `F.broadcast()` para que el optimizador Catalyst utilice `BroadcastHashJoin`, evitando *shuffles* innecesarios durante el cruce.
+
+---
+
+### 4. Reglas de Validación y Resultados Obtenidos
+
+- **Validación de entradas (`validate_lab8_input`, `validate_tc_input`, `validate_sp500_input`):** Verificación de existencia de columnas requeridas, tipos numéricos válidos, ausencia de fechas nulas y unicidad mensual (`0` meses duplicados) en el dataset base.
+- **Validación intermedia (`validate_prepared_monthly`):** Comprobación de que tanto `TC_MENSUAL` como `SP500_MENSUAL` tengan exactamente `1` fila por `PERIODO` antes de ejecutar los *joins*.
+- **Validación de salida (`validate_output`):** Verificación de conservación de cardinalidad (`registros_salida <= registros_lab8`, descartando multiplicaciones `N:M`), unicidad estricta de `PERIODO` y `0` valores nulos en las `9` columnas finales.
+- **Verificación en disco (`verify_persisted_output`):** Relectura automática del Parquet guardado para confirmar que su esquema y conteo coinciden con lo procesado.
+- **Evidencia de ejecución ([`reports/ultima_ejecucion.json`](reports/ultima_ejecucion.json)):** Última corrida completada con `"estado": "OK"`, `"error": null` y **187 registros** integrados.
+
+---
+
+### 5. Conjunto de Datos Generado (Salida)
+
+- **Ubicación:** `data/processed/proyecto_integrado_mensual.parquet`
+- **Conteo y granularidad:** **187 registros** (`1` fila única por mes, `PERIODO` en formato `date`) y **9 columnas**, con **0 valores nulos**:
+
+| Columna | Tipo | Descripción |
+| :--- | :--- | :--- |
+| `PERIODO` | `date` | Primer día del mes (`YYYY-MM-01`), clave temporal única (`1:1`). |
+| `INGRESOS_REALES` | `double` | Ingresos del Gobierno Federal (`XBB`) deflactados con INPC. |
+| `GASTOS_REALES` | `double` | Gasto Total del Gobierno Federal (`XBC`) deflactado con INPC. |
+| `Total` | `double` | Índice IGAE total nacional. |
+| `Actividades primarias` | `double` | Índice IGAE del sector primario. |
+| `Actividades secundarias` | `double` | Índice IGAE del sector secundario. |
+| `Actividades terciarias` | `double` | Índice IGAE del sector terciario. |
+| `TC_CIERRE` | `double` | Tipo de cambio FIX USD/MXN al cierre hábil de cada mes. |
+| `SP500_CIERRE` | `double` | Índice S&P 500 al cierre de cada mes. |
+
+---
+
+### 6. Instrucciones de Ejecución y Reproducción
+
+1. **Preparar los datos de entrada:** Asegurar que en `data/raw/` se encuentren `finanzas_igae_mensual_final.parquet`, `tipo_cambio_fix.csv` y `s&p500_mensual.csv`.
+2. **Ejecutar desde la raíz del proyecto** (donde se ubica [`pipeline.py`](pipeline.py)):
+
+```bash
+spark-submit --master "local[*]" pipeline.py
