@@ -7,6 +7,7 @@ REQUIRED_LAB8_COLS = {
     "PERIODO",
     "INGRESOS_REALES",
     "GASTOS_REALES",
+    "INPC",
     "Total",
     "Actividades primarias",
     "Actividades secundarias",
@@ -18,6 +19,7 @@ REQUIRED_TC_COLS = {"fecha", "dato"}
 REQUIRED_SP500_COLS = {
     "fecha",
     "sp500_cierre",
+    "SP500_promedio",
     "sp500_min_mes",
     "sp500_max_mes",
     "sp500_vol_mes",

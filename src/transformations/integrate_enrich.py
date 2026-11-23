@@ -23,15 +23,16 @@ def prepare_tipo_cambio(df_tc_raw):
 
 
 def prepare_sp500(df_sp_raw):
-    """Homologa PERIODO y conserva únicamente el cierre mensual del S&P 500."""
-    print("[TRANSFORM] Homologando PERIODO en S&P 500 (solo cierre)")
-
+    """Homologa PERIODO y conserva cierre y promedio del S&P 500, más el cierre del VIX."""
+    print("[TRANSFORM] Homologando PERIODO en S&P 500 y VIX")
     return (
         df_sp_raw
         .withColumn("PERIODO", F.trunc(F.to_date(F.col("fecha")), "month"))
         .select(
             "PERIODO",
             F.col("sp500_cierre").alias("SP500_CIERRE"),
+            F.col("sp500_promedio").alias("SP500_PROMEDIO"),
+            F.col("vix_cierre").alias("VIX_CIERRE"),          # <--- AGREGADO
         )
     )
 
@@ -49,11 +50,14 @@ def integrate_and_enrich(df_lab8, df_tc_mensual, df_sp_mensual):
             "INGRESOS_REALES",
             "GASTOS_REALES",
             "Total",
+            "INPC",
             "Actividades primarias",
             "Actividades secundarias",
             "Actividades terciarias",
             "TC_CIERRE",
             "SP500_CIERRE",
+            "SP500_PROMEDIO",
+            "VIX_CIERRE",
         )
         .orderBy("PERIODO")
     )
