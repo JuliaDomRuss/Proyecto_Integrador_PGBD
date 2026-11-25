@@ -1,11 +1,11 @@
 {
-  "fecha_utc": "2026-11-23T20:23:35.928071+00:00",
+  "fecha_utc": "2026-11-25T20:32:24.968944+00:00",
   "estado": "OK",
   "registros_entrada": {
-    "lab8": 187,
+    "lab8": 283,
     "tipo_cambio_diario": 8791,
     "sp500_mensual": 442
   },
-  "registros_salida": 187,
+  "registros_salida": 283,
   "error": null
 }

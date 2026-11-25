@@ -10,10 +10,10 @@ SCHEMA_TIPO_CAMBIO = T.StructType([
 SCHEMA_SP500 = T.StructType([
     T.StructField("fecha", T.StringType(), True),
     T.StructField("sp500_cierre", T.DoubleType(), True),
-    T.StructField("SP500_promedio", T.DoubleType(), True),
     T.StructField("sp500_min_mes", T.DoubleType(), True),
     T.StructField("sp500_max_mes", T.DoubleType(), True),
     T.StructField("sp500_vol_mes", T.DoubleType(), True),
+    T.StructField("SP500_promedio", T.DoubleType(), True),
     T.StructField("sp500_fecha_ultimo_habil", T.StringType(), True),
     T.StructField("sp500_ret_m", T.DoubleType(), True),
     T.StructField("sp500_rango_mes", T.DoubleType(), True),
