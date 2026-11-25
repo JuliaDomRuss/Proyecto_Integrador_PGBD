@@ -1,0 +1,7 @@
+factor externo,variable fiscal,r (completa),IC95 inf,IC95 sup,IC excluye 0,r (sin COVID)
+VIX (incertidumbre global),Ingresos reales del Gobierno,-0.023,-0.121,0.076,False,0.01
+VIX (incertidumbre global),Gastos reales del Gobierno,-0.017,-0.147,0.119,False,-0.036
+S&P 500 (promedio del mes),Ingresos reales del Gobierno,0.022,-0.072,0.14,False,0.005
+S&P 500 (promedio del mes),Gastos reales del Gobierno,0.002,-0.076,0.114,False,0.025
+Tipo de cambio USD/MXN,Ingresos reales del Gobierno,0.071,-0.075,0.165,False,0.132
+Tipo de cambio USD/MXN,Gastos reales del Gobierno,-0.004,-0.121,0.127,False,0.0

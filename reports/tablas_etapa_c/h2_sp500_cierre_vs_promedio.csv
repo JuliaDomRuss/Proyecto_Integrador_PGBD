@@ -1,0 +1,6 @@
+,Muestra completa,Muestra completa,Muestra completa,Muestra completa,Muestra completa,Muestra completa,Sin ventana COVID,Sin ventana COVID,Sin ventana COVID,Sin ventana COVID,Sin ventana COVID,Sin ventana COVID
+,r_cierre,r_promedio,diferencia (prom - cierre),dif_ic95_inf,dif_ic95_sup,dif_excluye_cero,r_cierre,r_promedio,diferencia (prom - cierre),dif_ic95_inf,dif_ic95_sup,dif_excluye_cero
+variable,,,,,,,,,,,,
+IGAE total,0.138,0.251,0.113,0.036,0.155,True,-0.296,-0.256,0.039,-0.011,0.09,False
+Industria (secundarias),0.124,0.238,0.114,0.013,0.158,True,-0.359,-0.336,0.023,-0.026,0.075,False
+Servicios (terciarias),0.147,0.256,0.109,0.045,0.152,True,-0.216,-0.167,0.05,-0.003,0.106,False

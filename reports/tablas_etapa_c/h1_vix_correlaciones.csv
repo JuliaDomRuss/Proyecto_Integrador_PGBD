@@ -1,0 +1,7 @@
+,Muestra completa,Muestra completa,Muestra completa,Muestra completa,Sin ventana COVID,Sin ventana COVID,Sin ventana COVID,Sin ventana COVID
+,r,ic95_inf,ic95_sup,ic_excluye_cero,r,ic95_inf,ic95_sup,ic_excluye_cero
+variable,,,,,,,,
+Tipo de cambio USD/MXN,0.448,0.225,0.618,True,0.359,0.107,0.601,True
+IGAE total,-0.353,-0.462,0.046,False,-0.029,-0.199,0.152,False
+Industria (secundarias),-0.301,-0.407,0.077,False,-0.006,-0.215,0.221,False
+Servicios (terciarias),-0.373,-0.496,0.029,False,-0.025,-0.194,0.141,False

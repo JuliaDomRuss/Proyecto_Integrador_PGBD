@@ -1,0 +1,10 @@
+Hallazgo,Factor,Variable en México,r (completa),IC95 %,r (sin COVID),r²,Veredicto
+H1,VIX,Tipo de cambio USD/MXN,0.448,"[+0.23, +0.62]",0.359,0.201,robusta (se mantiene sin COVID)
+H1,VIX,IGAE total,-0.353,"[-0.46, +0.05]",-0.029,0.125,no distinguible de cero
+H1,VIX,Servicios (terciarias),-0.373,"[-0.50, +0.03]",-0.025,0.139,no distinguible de cero
+H1,VIX,Industria (secundarias),-0.301,"[-0.41, +0.08]",-0.006,0.091,no distinguible de cero
+H2,S&P 500 promedio,IGAE total,0.251,"[-0.29, +0.51]",-0.256,0.063,no distinguible de cero
+H2,S&P 500 cierre,IGAE total,0.138,"[-0.34, +0.41]",-0.296,0.019,no distinguible de cero
+H3,Tipo de cambio (mismo mes),Inflación (INPC),-0.457,"[-0.67, -0.26]",-0.421,0.209,robusta (se mantiene sin COVID)
+Fiscal,VIX,Ingresos reales del Gobierno,-0.023,"[-0.12, +0.08]",0.01,0.001,no distinguible de cero
+Fiscal,Tipo de cambio,Gastos reales del Gobierno,-0.004,"[-0.12, +0.13]",0.0,0.0,no distinguible de cero
